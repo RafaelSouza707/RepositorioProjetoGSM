@@ -1,0 +1,69 @@
+body {
+    background-color: #363636;
+    color: white;
+}
+
+.carousel-img {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+}
+
+/* Títulos */
+.home-container h5 {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Cards do catálogo */
+.movie-card {
+  background-color: #1c1c1c;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 100%;
+  color: white;
+}
+
+
+.movie-card .card-img-fixed {
+  width: 100%;          /* ocupar largura total do card */
+  height: 280px;        /* altura fixa */
+  object-fit: cover;    /* corta o excesso, sem distorcer */
+  object-position: center; /* centraliza o recorte */
+  display: block;  
+}
+
+/* Botão catálogo */
+.movie-card button {
+  border-radius: 20px;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+/* Cards da lista do usuário */
+.user-list-card {
+  background-color: #1c1c1c;
+  border: none;
+  border-radius: 10px;
+  text-align: center;
+}
+
+
+.user-list-card img {
+  object-fit: cover;
+  height: 300px;
+  border-radius: 10px 10px 0 0;
+}
+
+.user-list-card .card-title {
+  font-size: 0.85rem;
+  margin: 8px 0;
+  color: #ddd;
+}
+
+.user-list-card button {
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+

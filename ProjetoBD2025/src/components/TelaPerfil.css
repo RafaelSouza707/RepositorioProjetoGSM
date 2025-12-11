@@ -1,0 +1,56 @@
+.perfil-container {
+    color: #fff;
+}
+
+.perfil-header {
+    background: #1c1c1c94;
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+    height: 150px;
+    border-radius: 10px;
+}
+
+.perfil-icone {
+    border-radius: 50%;
+    overflow: hidden;
+    border: 30px solid #0d6efdff;
+}
+
+.perfil-nome {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.perfil-email {
+    color: #bbb;
+    font-size: 1rem;
+}A
+
+h4 {
+    font-weight: 600;
+    margin-top: 40px;
+}
+
+.perfil-card {
+    background: #1c1c1c;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+
+.perfil-card-img {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    height: 280px;
+    object-fit: cover;
+}
+
+.perfil-card-titulo {
+    font-size: 0.95rem;
+    margin-top: 10px;
+    font-weight: 500;
+    color: #eee;
+}

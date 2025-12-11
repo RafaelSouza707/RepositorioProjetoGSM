@@ -1,0 +1,14 @@
+
+.card-login {
+    margin: 100px;
+    padding: 50px;
+    border: 1px solid black;
+    border-radius: 20px;
+    box-shadow: 5px 2px 20px 2px rgba(22, 22, 22, 0.719);
+    width: 500px;
+    background-color: rgba(207, 205, 205, 0.322);
+}
+
+.botao-form {
+    margin-top: 25px;
+}
