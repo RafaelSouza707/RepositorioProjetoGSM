@@ -20,10 +20,12 @@ export async function atualizarUsuario(dados) {
     return respota.data;
 }
 
-export async function listarFilmes() {return [];}
+export async function listarFilmesDoUsuario() {
+    return [];
+}
 
-export async function listarFilmesDoUsuario() {return [];}
 export async function adicionarFilmeLista() {}
-export async function listarFilmes() {}
+
 export async function removerFilmeLista() {}
+
 export async function marcarAssistido() {}

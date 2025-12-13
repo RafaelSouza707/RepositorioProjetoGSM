@@ -22,7 +22,12 @@ function TelaLogin({ setUser }) {
             setUser(data);
             localStorage.setItem("user", JSON.stringify(data));
 
-            navigate("/");
+            if (data.tipo === "adm") {
+                navigate("/tela-adm")
+            } else {
+                navigate("/")
+            }
+            
         } catch (err) {
             alert(err.message);
         }

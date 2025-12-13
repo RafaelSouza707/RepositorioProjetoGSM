@@ -2,7 +2,7 @@ import api from "./api";
 
 export async function listarFilmes() {
     const resposta = await api.get("/filme");
-    return resposta;
+    return resposta.data;
 }
 
 export async function criarFilme(dados) {
@@ -10,12 +10,12 @@ export async function criarFilme(dados) {
     return resposta.data;
 }
 
-export async function atualizarFilme(dados) {
+export async function atualizarFilme(id, dados) {
     const resposta = await api.put(`/filme/${id}`, dados);
     return resposta.data;
 }
 
-export async function deletarFilme() {
+export async function deletarFilme(id) {
     const resposta = await api.delete(`/filme/${id}`);
     return resposta.data;
 }

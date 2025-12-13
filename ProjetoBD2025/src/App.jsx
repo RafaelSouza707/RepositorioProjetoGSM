@@ -7,6 +7,7 @@ import TelaADM from "./components/TelaADM";
 import TelaPerfil from "./components/TelaPerfil";
 
 function App() {
+
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -30,6 +31,7 @@ function App() {
   }, [user, navigate]);
 
   return (
+    <>
       <Routes>
         <Route path="/" element={<MainLayout user={user} setUser={setUser} />}>
           <Route index element={<Home user={user} />} />
@@ -37,11 +39,12 @@ function App() {
           <Route path="tela-perfil" element={<TelaPerfil user={user} />} />
           <Route
             path="tela-adm"
-            element={user?.role === "admin" ? <TelaADM /> : <Home user={user} />}
-          />
+            element={user?.tipo === "adm" ? <TelaADM /> : <Home user={user} />}
+            />
         </Route>
 
       </Routes>
+    </>
   );
 }
 

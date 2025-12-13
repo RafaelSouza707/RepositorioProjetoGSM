@@ -19,7 +19,7 @@ body {
 .movie-card {
   background-color: #1c1c1c;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   overflow: hidden;
   height: 100%;
   color: white;
@@ -28,7 +28,6 @@ body {
 
 .movie-card .card-img-fixed {
   width: 100%;          /* ocupar largura total do card */
-  height: 280px;        /* altura fixa */
   object-fit: cover;    /* corta o excesso, sem distorcer */
   object-position: center; /* centraliza o recorte */
   display: block;  

@@ -8,17 +8,12 @@ import Carrossel from './Carrossel.jsx';
 import './Home.css';
 
 
-import {
-  listarFilmes,
-  listarFilmesDoUsuario,
-  adicionarFilmeLista,
-  removerFilmeLista,
-  marcarAssistido
-} from "../services/usuario.js"; 
+import { listarFilmesDoUsuario, adicionarFilmeLista, removerFilmeLista, marcarAssistido } from "../services/usuario.js"; 
+import { listarFilmes } from "../services/filme.js";
 
 
 const styles = {
-  cardImage: { height: '280px', objectFit: 'cover' },
+  cardImage: { height: '500px', objectFit: 'cover' },
   cardTitle: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
   cardText: {
     display: '-webkit-box',
@@ -38,46 +33,35 @@ export default function Home({ user }) {
   const [selectedGenre, setSelectedGenre] = useState('');
   const [allGenres, setAllGenres] = useState([]);
 
-  // ========= Carregar catálogo ==========
   useEffect(() => {
     async function carregar() {
       try {
-        const data = await listarFilmes(); // Apenas chamada
-        setMovies(data || []);
+        const data = await listarFilmes();
+          setMovies(data);
 
-        const genresSet = new Set();
-        (data || []).forEach(m =>
-          m.generos?.forEach(g => genresSet.add(g))
-        );
-        setAllGenres([...genresSet].sort());
-      } catch {
+      } catch (err) {
+        console.log(err);
         setError("Erro ao carregar filmes");
+
       } finally {
         setLoading(false);
+
       }
     }
 
     carregar();
   }, []);
 
-  // ========= Buscar lista do usuário ==========
+  useEffect(() => {
+    console.log("MOVIES ATUALIZADO:", movies);
+  }, [movies]);
+
   const fetchUserMovies = async () => {
     if (!user?.id) return;
     const list = await listarFilmesDoUsuario(user.id);
     setUserMovies(list || []);
   };
 
-  // ========= FILTRO ==========
-  const filteredMovies = movies.filter(movie => {
-    const byTitle = movie.titulo?.toLowerCase()
-      .includes(searchTerm.toLowerCase());
-
-    const byGenre = !selectedGenre || movie.generos?.includes(selectedGenre);
-
-    return byTitle && byGenre;
-  });
-
-  // ========= AÇÕES ==========
   const handleAdicionar = async (movie) => {
     await adicionarFilmeLista(user?.id, movie.id);
     setSuccessMessage(`${movie.titulo} adicionado!`);
@@ -108,35 +92,6 @@ export default function Home({ user }) {
 
       <Carrossel />
 
-      {/* PESQUISA + FILTROS */}
-      <Row className="mb-4 mt-4">
-        <Col md={6}>
-          <InputGroup>
-            <InputGroup.Text>🔍</InputGroup.Text>
-            <Form.Control
-              placeholder="Pesquisar por filme..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </InputGroup>
-        </Col>
-
-        <Col md={6}>
-          <InputGroup>
-            <InputGroup.Text>🎬</InputGroup.Text>
-            <Form.Select
-              value={selectedGenre}
-              onChange={(e) => setSelectedGenre(e.target.value)}
-            >
-              <option value="">Todos os gêneros</option>
-              {allGenres.map(g => (
-                <option key={g} value={g}>{g}</option>
-              ))}
-            </Form.Select>
-          </InputGroup>
-        </Col>
-      </Row>
-
       {error && <Alert variant="danger">{error}</Alert>}
       {successMessage && <Alert variant="success">{successMessage}</Alert>}
 
@@ -148,8 +103,8 @@ export default function Home({ user }) {
             {userMovies.map(movie => (
               <Col key={movie.id} xs={6} md={3} lg={2}>
                 <Card className="user-list-card">
-                  {movie.imagem && (
-                    <Card.Img src={movie.imagem} style={styles.cardImage} />
+                  {movie.capa_filme && (
+                    <Card.Img src={movie.capa_filme} style={styles.cardImage} />
                   )}
                   <Card.Body>
                     <Card.Title style={styles.cardTitle}>{movie.titulo}</Card.Title>
@@ -174,23 +129,27 @@ export default function Home({ user }) {
       {/* CATÁLOGO */}
       <h5 className="mt-4 mb-4">Catálogo</h5>
 
-      {filteredMovies.length === 0 ? (
+      {movies.length === 0 ? (
         <Alert variant="info" className="text-center">
           Nenhum filme encontrado.
         </Alert>
       ) : (
         <Row className="g-3">
-          {filteredMovies.map(movie => (
-            <Col key={movie.id} md={2}>
+          {movies.map(movie => (
+            <Col key={movie.id} md={3}>
               <Card className="movie-card h-100">
-                {movie.imagem && (
-                  <Card.Img src={movie.imagem} style={styles.cardImage} />
+                {movie.capa_filme && (
+                  <Card.Img src={movie.capa_filme} style={styles.cardImage} />
                 )}
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>{movie.titulo}</Card.Title>
+                  
+                  <Card.Text style={styles.cardText}>
+                    <b>Diretor(es):</b> {movie.diretor || "Sem roterista"}
+                  </Card.Text>
 
                   <Card.Text style={styles.cardText}>
-                    {movie.sinopse || "Sem sinopse"}
+                    <b>Roteristas:</b> {movie.roteiro || "Sem roterista"}
                   </Card.Text>
 
                   <Card.Text>
@@ -198,7 +157,7 @@ export default function Home({ user }) {
                   </Card.Text>
 
                   <Card.Text>
-                    <small>Lançamento: {movie.dataLancamento || "N/A"}</small>
+                    <small>Lançamento: {movie.dt_lancamento || "N/A"}</small>
                   </Card.Text>
 
                   <Button
