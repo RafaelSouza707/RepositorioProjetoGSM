@@ -1,0 +1,114 @@
+main {
+    overflow-x: hidden;
+    overflow-y: visible; 
+    width: 100%;
+}
+
+.layout-width {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px; 
+    box-sizing: border-box;
+}
+
+.navbar {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    z-index: 1050;
+    overflow:  visible; 
+}
+
+.navbar-logo svg {
+    color: #e50914; 
+}
+
+.navbar-logo span {
+    letter-spacing: 0.5px;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing:  0.5px;
+    color: #ffffff !important;
+}
+
+/* Usuário */
+.user-toggle {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: none !important;
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: white !important;
+}
+
+
+.user-toggle:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.dropdown {
+    position: relative; 
+}
+
+.dropdown-menu {
+    background: #111 !important;
+    border-radius: 10px;
+    border: none;
+    margin-top: 10px;
+    overflow: visible; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
+    z-index: 1060 !important; 
+    position: absolute ! important; 
+}
+
+.dropdown-menu.show {
+    display: block ! important; 
+}
+
+.dropdown-menu .dropdown-item {
+    color: #ddd;
+    padding: 10px 16px;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background:  #222;
+    color: white;
+}
+
+.btn-login {
+    --bs-btn-bg: #960303;
+    --bs-btn-color: #ffffff;
+    --bs-btn-hover-bg: #bd0808;
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-active-bg:  #960303;
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-focus-shadow-rgb: 0, 0, 0;
+
+    background-color: #960303 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-weight: 600;
+    box-shadow: none !important;
+}
+
+/* hover */
+.btn-login:hover {
+    background-color: #bd0808 ! important;
+    color: #ffffff !important;
+}
+
+/* focus / click */
+.btn-login:focus,
+.btn-login:focus-visible,
+.btn-login:active {
+    background-color: #960303 ! important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
