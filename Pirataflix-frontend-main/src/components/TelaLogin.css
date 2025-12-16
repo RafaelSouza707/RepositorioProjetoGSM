@@ -74,9 +74,10 @@
     background: #880404
 }
 
-
 .form-control.is-invalid {
     border-color: #dc3545;
     background-image: none;
+    background-color: #d8747e5e;
 }
+
 
