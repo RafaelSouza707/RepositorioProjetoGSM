@@ -21,7 +21,8 @@ def listar_filmes():
         conn.close()
 
     return jsonify([
-        {"id": f[0],
+        {
+        "id": f[0],
         "titulo": f[1],
         "diretor": f[2],
         "dt_lancamento": f[3].strftime("%Y-%m-%d") if f[3] else None,
