@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { Button, Row } from "react-bootstrap";
@@ -117,8 +117,19 @@ function TelaLogin({ setUser }) {
         setMensagemSucesso("");
     };
 
+    useEffect(() => {
+        if (mensagemErro || mensagemSucesso) {
+            const timer = setTimeout(() => {
+                setMensagemErro("");
+                setMensagemSucesso("");
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [mensagemErro, mensagemSucesso]);
+
     return (
-        
+
         <section className="login-container">
             <Form
                 className="card-login"
@@ -129,11 +140,11 @@ function TelaLogin({ setUser }) {
                 </h2>
 
                 {mensagemErro && (
-                    <Alert variant="danger">{mensagemErro}</Alert>
+                    <Alert dismissible variant="danger">{mensagemErro}</Alert>
                 )}
 
                 {mensagemSucesso && (
-                    <Alert variant="success">{mensagemSucesso}</Alert>
+                    <Alert dismissible variant="success">{mensagemSucesso}</Alert>
                 )}
 
                 {modoCadastro && (

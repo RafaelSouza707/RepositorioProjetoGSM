@@ -4,15 +4,16 @@ import {
   Button, Form, InputGroup
 } from 'react-bootstrap';
 
+import { useNavigate } from "react-router-dom";
+
 import Carrossel from './Carrossel.jsx';
 import './Home.css';
-
-import { listarFilmesDoUsuario, adicionarFilmeLista, removerFilmeLista, marcarAssistido } from "../services/usuario.js";
+import { listarFavoritos, adicionarFavorito, removerFavorito,marcarAssistido} from "../services/usuario.js";
 import { listarFilmes } from "../services/filme.js";
 
 
 const styles = {
-  cardImage: { height: '500px', objectFit: 'cover' },
+  cardImage: { height: '250px', objectFit: 'cover'},
   cardTitle: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
   cardText: {
     display: '-webkit-box',
@@ -22,7 +23,19 @@ const styles = {
   }
 };
 
+const formatarData = (dataString) => {
+    if (!dataString) return "N/A";
+
+    return new Date(dataString).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+  };
+
+
 export default function Home({ user }) {
+  const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
   const [userMovies, setUserMovies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,24 +70,30 @@ export default function Home({ user }) {
 
   const fetchUserMovies = async () => {
     if (!user?.id) return;
-    const list = await listarFilmesDoUsuario(user.id);
+    const list = await listarFavoritos(user.id);
     setUserMovies(list || []);
   };
 
-  const handleAdicionar = async (movie) => {
-  if (!user) {
-    setError("Você precisa estar logado para adicionar filmes à lista.");
-    return;
-  }
+  useEffect(() => {
+    if (user?.id) {
+      fetchUserMovies();
+    }
+  }, [user]);
 
-  await adicionarFilmeLista(user.id, movie.id);
-  setSuccessMessage(`${movie.titulo} adicionado!`);
-  fetchUserMovies();
-};
+  const handleAdicionar = async (movie) => {
+    if (!user) {
+      setError("Você precisa estar logado para adicionar filmes à lista.");
+      return;
+    }
+
+    await adicionarFavorito(user.id, movie.id);
+    setSuccessMessage(`${movie.titulo} adicionado à sua lista!`);
+    fetchUserMovies();
+  };
 
   const handleRemover = async (movie) => {
-    await removerFilmeLista(user?.id, movie.id);
-    setSuccessMessage(`${movie.titulo} removido!`);
+    await removerFavorito(user?.id, movie.id);
+    setError(`${movie.titulo} removido da sua lista!`);
     fetchUserMovies();
   };
 
@@ -84,6 +103,18 @@ export default function Home({ user }) {
     fetchUserMovies();
   };
 
+  useEffect(() => {
+    if (error || successMessage) {
+      const timer = setTimeout(() => {
+        setError("");
+        setSuccessMessage("");
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error, successMessage]);
+
+
   if (loading)
     return (
       <Container className="d-flex justify-content-center align-items-center vh-100">
@@ -91,43 +122,56 @@ export default function Home({ user }) {
       </Container>
     );
 
+
   return (
     <>
       <Carrossel />
 
       <Container className="home" style={{ fontFamily: 'Inter, sans-serif' }}>
 
-        {error && <Alert variant="danger">{error}</Alert>}
-        {successMessage && <Alert variant="success">{successMessage}</Alert>}
+        {error && <Alert dismissible variant="danger">{error}</Alert>}
+        {successMessage && <Alert dismissible variant="success">{successMessage}</Alert>}
 
         {/* LISTA DO USUÁRIO */}
-        {user && userMovies.length > 0 && (
+        <h5 className="catalogo-title">Sua Lista</h5>
+
+        {!user ? (
+          <p className="login-text" onClick={() => navigate('/tela-login')}>
+            Faça login pra adicionar filmes à sua lista e acompanhar o que já assistiu!
+          </p>
+        ) : (
           <>
-            <h5 className="mb-3">Sua Lista</h5>
-            <Row className="catalogo-row g-3 flex-nowrap overflow-auto">
-              {userMovies.map(movie => (
-                <Col key={movie.id} xs={6} md={3} lg={2}>
-                  <Card className="user-list-card">
-                    {movie.capa_filme && (
-                      <Card.Img src={movie.capa_filme} style={styles.cardImage} />
-                    )}
-                    <Card.Body>
-                      <Card.Title style={styles.cardTitle}>{movie.titulo}</Card.Title>
+            {userMovies.length === 0 ? (
+              <p style={{ color: "#acacac", marginTop: 8, fontSize: "0.9rem" }}>
+                Você ainda não adicionou nenhum filme à sua lista.
+              </p>
+            ) : (
+              
+              <Row className="catalogo-row g-3">
+                {userMovies.map(movie => (
+                  <Col key={movie.id} xs={6} md={3} lg={2}>
+                    <Card className="user-list-card h-100 movie-card">
+                      {movie.capa_filme && (
+                        <Card.Img src={movie.capa_filme} style={styles.cardImage} />
+                      )}
+                      <Card.Body style={{ backgroundColor: "#1b1b1b" }}>
+                        <Card.Title style={styles.cardTitle}>{movie.titulo}</Card.Title>
 
-                      <Button size="sm" variant="danger" onClick={() => handleRemover(movie)}>
-                        Remover
-                      </Button>
+                        <Button size="sm" variant="danger" onClick={() => handleRemover(movie)}>
+                          Remover
+                        </Button>
 
-                      <Button size="sm" className="ms-2" variant="success"
-                        onClick={() => handleAssistido(movie)}
-                      >
-                        Assistido
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
+                        <Button size="sm" className="ms-2" variant="success"
+                          onClick={() => handleAssistido(movie)}
+                        >
+                          Assistido
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            )}
           </>
         )}
 
@@ -136,7 +180,7 @@ export default function Home({ user }) {
           <h5 className="catalogo-title">Catálogo</h5>
 
           {movies.length === 0 ? (
-            <Alert variant="info" className="text-center">
+            <Alert dismissible variant="danger" className="text-center">
               Nenhum filme encontrado.
             </Alert>
           ) : (
@@ -157,14 +201,14 @@ export default function Home({ user }) {
 
                       <p><strong>Gênero:</strong> {(movie.generos || []).join(", ")}</p>
 
-                      <small>Lançamento: {movie.dt_lancamento || "N/A"}</small>
+                      <small>Lançamento: {formatarData(movie.dt_lancamento) || "N/A"}</small>
 
                       <Button
                         size="sm"
                         variant="primary"
                         onClick={() => handleAdicionar(movie)}
                       >
-                        + Adicionar à lista
+                        <span style={{fontSize: "15px", color: "red" }}> + </span> Adicionar à lista
                       </Button>
                     </div>
                   </Card>

@@ -3,18 +3,17 @@
 }
 
 .perfil-header {
-    background: #1c1c1c94;
-    border-radius: 12px;
+    background: #1b1b1b;
     padding: 20px;
     width: 100%;
     height: 150px;
-    border-radius: 10px;
+    border-radius: 30px;
 }
 
 .perfil-icone {
     border-radius: 50%;
-    overflow: hidden;
-    border: 30px solid #0d6efdff;
+    padding: 6px;
+    background: linear-gradient(135deg, #ff0000, #8b0000);
 }
 
 .perfil-nome {
@@ -26,7 +25,7 @@
 .perfil-email {
     color: #bbb;
     font-size: 1rem;
-}A
+}
 
 h4 {
     font-weight: 600;
@@ -34,7 +33,7 @@ h4 {
 }
 
 .perfil-card {
-    background: #1c1c1c;
+    background: #1b1b1b;
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -53,4 +52,13 @@ h4 {
     margin-top: 10px;
     font-weight: 500;
     color: #eee;
+}
+
+.assistidos-section {
+    margin-top: 10px;
+    width: 100%;
+    min-height: 100px;
+    border-radius: 30px;
+    padding-bottom: 20px;
+    margin-top: 20px;
 }

@@ -8,7 +8,7 @@
 
 /* Card */
 .card-login {
-    background: rgba(32, 32, 32, 0.651);
+    background: rgba(36, 36, 36, 0.767);
     padding: 35px;
     border-radius: 14px;
     width: 100%;
@@ -70,8 +70,13 @@
     color: #970303 !important;
 }
 
-.botao-primario:disabled {
-    background: #880404
+.botao-primario:disabled,
+.botao-primario.disabled,
+.botao-primario:disabled:hover {
+    background: #880404 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    pointer-events: all !important;
 }
 
 .form-control.is-invalid {

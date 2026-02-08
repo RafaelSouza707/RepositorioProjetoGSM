@@ -15,28 +15,14 @@ body {
     box-sizing: border-box;
 }
 
-/* Evitar overflow horizontal nas linhas do catálogo e lista do usuário */
 .catalogo-row {
     overflow-x: hidden;
     contain: paint;
-    margin-left: -12px; /* Compensa o padding das colunas */
+    margin-left: -12px; 
     margin-right: -12px;
 }
 
-/* Cards da lista do usuário */
-.user-list-card {
-    background-color: #1c1c1c;
-    border:  none;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.user-list-card img {
-    object-fit: cover;
-    height: 300px;
-    border-radius: 10px 10px 0 0;
-}
-
+/* CARD LISTA DO USUÁRIO */
 .user-list-card .card-title {
     font-size: 0.85rem;
     margin:  8px 0;
@@ -154,17 +140,15 @@ body {
     background-color: #141414 !important;
 }
 
-/* SEÇÃO CATÁLOGO - ALINHAMENTO COM HEADER */
+/* CATÁLOGO */
 .catalogo-section {
     margin-top: 50px;
-    /* Remove qualquer padding extra que desalinha */
 }
 
-/* TÍTULO - Alinhado com a logo */
 .catalogo-title {
-    margin-left: 0; /* Já alinhado com o container */
+    margin-left: 0; 
     margin-bottom: 16px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .movie-info button:focus,
@@ -174,3 +158,16 @@ body {
     box-shadow: none !important;
     outline: none !important;
 }
+
+.login-text {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #838383;
+    cursor: pointer;
+}
+
+.login-text:hover {
+    color: #b1b1b1;
+    text-decoration: underline;
+}
+

@@ -30,6 +30,20 @@ function TelaADM() {
 
   const opcoesGeneros = ["Ação", "Comédia", "Drama", "Fantasia", "Terror"];
 
+  const anoAtual = new Date().getFullYear();
+  const dataMin = "1895-01-01";
+  const dataMax = `${anoAtual + 5}-12-31`;
+
+  const formatarData = (dataString) => {
+    if (!dataString) return "N/A";
+
+    return new Date(dataString).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+  };
+
   const handleShowAdicionar = () => {
     setEditarFilme(null);
     setTitulo('');
@@ -83,7 +97,8 @@ function TelaADM() {
       diretor,
       dt_lancamento,
       roteiro,
-      capa_filme
+      capa_filme,
+      generos
     };
 
     try {
@@ -91,7 +106,10 @@ function TelaADM() {
 
       if (editarFilme) {
         filmeSalvo = await atualizarFilme(editarFilme.id, filme);
-        setMovies(prev => prev.map(m => (m.id === filmeSalvo.id ? filmeSalvo : m)))
+        //setMovies(prev => prev.map(m => (m.id === filmeSalvo.id ? filmeSalvo : m)))
+
+        const filmesAtualizados = await listarFilmes();
+        setMovies(filmesAtualizados);
       } else {
         filmeSalvo = await criarFilme(filme);
         setMovies(prev => [...prev, filmeSalvo]);
@@ -160,16 +178,22 @@ function TelaADM() {
                 value={titulo}
                 onChange={e => setTitulo(e.target.value)}
                 autoFocus
-                isInvalid={titulo.trim().length < 3 && titulo.length > 0}
+                isInvalid={titulo.trim().length < 2 && titulo.length > 0}
               />
               <Form.Control.Feedback type="invalid">
-                O título deve ter pelo menos 3 caracteres.
+                O título deve ter pelo menos 2 caracteres.
               </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Data de publicação</Form.Label>
-              <Form.Control type="date" value={dt_lancamento} onChange={e => setDt_lancamento(e.target.value)} min="1900" />
+              <Form.Label>Data de lançamento</Form.Label>
+              <Form.Control
+                type="date"
+                value={dt_lancamento}
+                onChange={e => setDt_lancamento(e.target.value)}
+                min={dataMin}
+                max={dataMax}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -231,7 +255,7 @@ function TelaADM() {
 
                 <p><strong>Gênero:</strong> {(movie.generos || []).join(", ")}</p>
 
-                <small>Lançamento: {movie.dt_lancamento || "N/A"}</small>
+                <small>Lançamento: {formatarData(movie.dt_lancamento) || "N/A"}</small>
 
                 <Button variant="success" onClick={() => handleEditar(movie)}>Editar</Button>
                 <Button variant="danger" onClick={() => handleDelete(movie)}>

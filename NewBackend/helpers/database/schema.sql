@@ -21,11 +21,6 @@ CREATE TABLE IF NOT EXISTS filme (
     capa_filme TEXT
 );
 
-CREATE TABLE IF NOT EXISTS genero (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL UNIQUE
-);
-
 
 CREATE TABLE IF NOT EXISTS favorito (
     id SERIAL PRIMARY KEY,
@@ -43,11 +38,8 @@ CREATE TABLE IF NOT EXISTS assistido (
     UNIQUE(usuario_id, filme_id)
 );
 
-CREATE TABLE IF NOT EXISTS filme_genero (
-    id SERIAL PRIMARY KEY,
-    filme_id INTEGER NOT NULL,
-    genero_id INTEGER NOT NULL,
-    FOREIGN KEY (filme_id) REFERENCES filme(id) ON DELETE CASCADE,
-    FOREIGN KEY (genero_id) REFERENCES genero(id) ON DELETE CASCADE,
-    UNIQUE (filme_id, genero_id)
+CREATE TABLE filme_genero (
+  id SERIAL PRIMARY KEY,
+  filme_id INT NOT NULL REFERENCES filme(id) ON DELETE CASCADE,
+  genero_nome VARCHAR(100) NOT NULL
 );

@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint
 from helpers.database import get_connection
-from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 usuarios_bp = Blueprint("usuarios", __name__)
@@ -55,7 +55,7 @@ def login_usuario():
         conn.close()
         return jsonify({"erro": "Senha incorreta"}), 401
     
-    return jsonify({"erro": "Usuário não encontrado"}), 401
+    return jsonify({"erro": "Usuário não encontrado"}), 404
 
 
 @usuarios_bp.route("/usuarios", methods=["GET"])
@@ -200,7 +200,7 @@ def modificar_usuario_adm(user_id):
         UPDATE usuario
         SET {set_clause}
         WHERE id = %s
-        RETURNING id
+        RETURNING id, nome, email
         """,
         valores
     )
@@ -216,7 +216,11 @@ def modificar_usuario_adm(user_id):
     cur.close()
     conn.close()
 
-    return jsonify({"status": "atualizado", "id": user_id}), 202
+    return jsonify({
+    "id": atualizado[0],
+    "nome": atualizado[1],
+    "email": atualizado[2]
+}), 200
 
 
 @usuarios_bp.route("/usuarios/<user_id>/favoritos", methods={"GET"})
@@ -310,26 +314,41 @@ def remover_favorito(user_id, movie_id):
     return jsonify({"status": "filme removido dos favoritos"}), 200
 
 
-@usuarios_bp.route("/usuarios/<int:user_id>/assistidos/<int:movie_id>", methods={"POST"})
+@usuarios_bp.route("/usuarios/<int:user_id>/assistidos/<int:movie_id>", methods=["POST"])
 def marcar_assistido(user_id, movie_id):
     conn = get_connection()
     cur = conn.cursor()
 
     try:
-        cur.execute("INSERT INTO assistido (usuario_id, filme_id) VALUES (%s, %s)", (user_id, movie_id))
+        # Remove dos favoritos 
+        cur.execute("""
+            DELETE FROM favorito
+            WHERE usuario_id = %s AND filme_id = %s
+        """, (user_id, movie_id))
 
+        # Insere em assistidos s
+        cur.execute("""
+            INSERT INTO assistido (usuario_id, filme_id)
+            VALUES (%s, %s)
+            ON CONFLICT (usuario_id, filme_id) DO NOTHING
+            RETURNING id
+        """, (user_id, movie_id))
+
+        inserido = cur.fetchone()
         conn.commit()
-    
+
+        if not inserido:
+            return jsonify({"status": "já estava marcado como assistido"}), 200
+
     except Exception as e:
         conn.rollback()
         return jsonify({"erro": str(e)}), 500
-    
+
     finally:
         cur.close()
         conn.close()
 
-    return jsonify({"status":"Filme marcado como assistido"}), 201
-
+    return jsonify({"status": "Filme movido para assistidos"}), 201
 
 @usuarios_bp.route("/usuarios/<int:user_id>/assistidos/<int:movie_id>", methods={"DELETE"})
 def remover_assistido(user_id, movie_id):
@@ -354,3 +373,77 @@ def remover_assistido(user_id, movie_id):
         conn.close()
 
     return jsonify({"status":"Filme removido de assistido"}), 200
+
+
+
+#################################################
+
+@usuarios_bp.route("/usuarios/<int:user_id>", methods=["DELETE"])
+def deletar_usuario(user_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            "DELETE FROM usuario WHERE id = %s RETURNING id",
+            (user_id,)
+        )
+
+        deletado = cur.fetchone()
+
+        if not deletado:
+            conn.rollback()
+            return jsonify({"erro": "Usuário não encontrado"}), 404
+
+        conn.commit()
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"erro": str(e)}), 500
+
+    finally:
+        cur.close()
+        conn.close()
+
+    return jsonify({"status": "usuário deletado", "id": user_id}), 200
+
+
+@usuarios_bp.route("/usuarios/<int:user_id>/assistidos", methods=["GET"])
+def listar_assistidos(user_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute("""
+            SELECT
+                f.id,
+                f.titulo,
+                f.diretor,
+                f.dt_lancamento,
+                f.roteiro,
+                f.capa_filme
+            FROM assistido a
+            JOIN filme f ON f.id = a.filme_id
+            WHERE a.usuario_id = %s
+        """, (user_id,))
+
+        filmes = cur.fetchall()
+
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+    finally:
+        cur.close()
+        conn.close()
+
+    return jsonify([
+        {
+            "id": f[0],
+            "titulo": f[1],
+            "diretor": f[2],
+            "dt_lancamento": f[3].strftime("%Y-%m-%d") if f[3] else None,
+            "roteiro": f[4],
+            "capa_filme": f[5]
+        }
+        for f in filmes
+    ])
