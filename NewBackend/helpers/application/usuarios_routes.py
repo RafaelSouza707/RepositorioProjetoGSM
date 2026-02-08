@@ -320,13 +320,11 @@ def marcar_assistido(user_id, movie_id):
     cur = conn.cursor()
 
     try:
-        # Remove dos favoritos 
         cur.execute("""
             DELETE FROM favorito
             WHERE usuario_id = %s AND filme_id = %s
         """, (user_id, movie_id))
 
-        # Insere em assistidos s
         cur.execute("""
             INSERT INTO assistido (usuario_id, filme_id)
             VALUES (%s, %s)
@@ -349,6 +347,7 @@ def marcar_assistido(user_id, movie_id):
         conn.close()
 
     return jsonify({"status": "Filme movido para assistidos"}), 201
+
 
 @usuarios_bp.route("/usuarios/<int:user_id>/assistidos/<int:movie_id>", methods={"DELETE"})
 def remover_assistido(user_id, movie_id):

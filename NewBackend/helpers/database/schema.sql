@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS assistido (
     UNIQUE(usuario_id, filme_id)
 );
 
-CREATE TABLE filme_genero (
+CREATE TABLE IF NOT EXISTS filme_genero (
   id SERIAL PRIMARY KEY,
   filme_id INT NOT NULL REFERENCES filme(id) ON DELETE CASCADE,
   genero_nome VARCHAR(100) NOT NULL
