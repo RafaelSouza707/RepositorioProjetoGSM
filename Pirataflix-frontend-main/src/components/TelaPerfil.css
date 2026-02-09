@@ -62,3 +62,82 @@ h4 {
     padding-bottom: 20px;
     margin-top: 20px;
 }
+
+
+.table-container {
+    background-color: #1b1b1b;
+    padding: 16px;
+    border-radius: 14px;
+}
+
+/* tabela base */
+.admin-table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* cabeçalho */
+.admin-table thead th {
+    background-color: #1b1b1b !important;
+    color: #f1f1f1;
+    font-weight: 600;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+/* linhas */
+.admin-table tbody tr {
+    background-color: #141414;
+    transition: background-color 0.2s ease;
+}
+
+/* hover */
+.admin-table tbody tr:hover {
+    background-color: #1d1d1d;
+}
+
+/* células */
+.admin-table td {
+    border-color: #2a2a2a;
+    vertical-align: middle;
+}
+
+.admin-table.table-dark>tbody>tr>td {
+    background-color: #1b1b1b !important;
+}
+
+
+.lista-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.barra-titulo {
+    width: 4px;
+    align-self: stretch;
+    background-color: #e50914;
+    border-radius: 2px;
+}
+
+.lista-header h2 {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    
+}
+
+.titulo-lista {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.contador {
+    font-size: 18px;
+    font-weight: 400;
+    color: #8c8c8c;
+
+}

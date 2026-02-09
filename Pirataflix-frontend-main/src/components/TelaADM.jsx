@@ -159,11 +159,29 @@ function TelaADM() {
   };
 
   return (
-    <Container className="p-4">
-      <div className="d-flex justify-content-end mb-3">
-        <Button variant="success" style={{ borderRadius: "50px" }} onClick={handleShowAdicionar}>+ Adicionar Filme</Button>
+    <Container className="home" style={{ fontFamily: 'Inter, sans-serif' }}>
+      <br />
+      <div className="admin-header mb-4 mt-5">
+        <div>
+          <h2 className="admin-title">Administração de Filmes</h2>
+          <p className="admin-subtitle">
+            Gerencie o catálogo, adicione, edite ou remova filmes da plataforma
+          </p>
+        </div>
+
+        <div className="admin-badge">
+          <Button
+          variant="success"
+          style={{ borderRadius: "50px" }}
+          onClick={handleShowAdicionar}
+        >
+          + Adicionar Filme
+        </Button>
+        </div>
       </div>
 
+      <br />
+      
       {/* Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
@@ -236,11 +254,18 @@ function TelaADM() {
           </Button>
         </Modal.Footer>
       </Modal>
-
+      
+      <hr />
+      <div className="d-flex justify-content-between align-items-center mb-5 mt-5 lista-header">
+        <h2 className=" titulo-lista">
+          <span className="barra-titulo"></span>
+          Catálogo <span className="text-secondary">({movies.length})</span>
+        </h2>
+      </div>
       {/* Lista de filmes */}
       <Row className="g-3">
         {movies.map(movie => (
-          <Col key={movie.id} md={3}>
+          <Col key={movie.id} md={2} sm={4} xs={6}>
             <Card className="movie-card">
               <div className="movie-cover">
                 <img src={movie.capa_filme} alt={movie.titulo} />

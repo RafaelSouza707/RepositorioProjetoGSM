@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import IconeUsuario from "../components/InconeUsuario";
 import "./MainLayout.css";
 import { FaFilm } from "react-icons/fa";
+import { Person, BoxArrowRight } from "react-bootstrap-icons";
 
 
 function MainLayout({ user, setUser }) {
@@ -23,8 +24,8 @@ function MainLayout({ user, setUser }) {
         className="navbar"
       >
         <div className="layout-width d-flex align-items-center w-100">
-          <Navbar.Brand as={Link} to={user?.tipo === "adm" ? "/tela-adm" : "/"} 
-          className="navbar-logo d-flex align-items-center gap-2">
+          <Navbar.Brand as={Link} to={user?.tipo === "adm" ? "/tela-adm" : "/"}
+            className="navbar-logo d-flex align-items-center gap-2">
             <FaFilm size={25} />
             <span>PirataFlix</span>
           </Navbar.Brand>
@@ -38,14 +39,21 @@ function MainLayout({ user, setUser }) {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="dropdown-menu">
-                  <Dropdown.Item as={Link} to="/tela-perfil">
-                    Perfil
+
+                  <Dropdown.Item as={Link} to="/tela-perfil" className="d-flex align-items-center gap-2">
+                    <Person size={16} />
+                    {user?.tipo === "adm" ? "Painel Administrativo" : "Perfil"}
                   </Dropdown.Item>
+
                   <Dropdown.Divider />
-                  <Dropdown.Item onClick={handleLogout}>
+
+                  <Dropdown.Item onClick={handleLogout} className="d-flex align-items-center gap-2 text-danger">
+                    <BoxArrowRight size={16} />
                     Sair
                   </Dropdown.Item>
+
                 </Dropdown.Menu>
+
               </Dropdown>
             ) : (
               <Button as={Link} to="/tela-login" className="btn-login">
@@ -60,7 +68,7 @@ function MainLayout({ user, setUser }) {
         <Outlet />
       </main>
 
-      <footer className="text-light text-center py-3 mt-5" style={{ backgroundColor: "#000000ff" }}>
+      <footer className="text-light text-center py-3" style={{ backgroundColor: "#000000ff", marginTop: "80px" }}>
         <p>© {new Date().getFullYear()} - PirataFlix</p>
       </footer>
     </div>

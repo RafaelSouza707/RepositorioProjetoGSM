@@ -8,12 +8,12 @@ import { useNavigate } from "react-router-dom";
 
 import Carrossel from './Carrossel.jsx';
 import './Home.css';
-import { listarFavoritos, adicionarFavorito, removerFavorito,marcarAssistido} from "../services/usuario.js";
+import { listarFavoritos, adicionarFavorito, removerFavorito, marcarAssistido } from "../services/usuario.js";
 import { listarFilmes } from "../services/filme.js";
 
 
 const styles = {
-  cardImage: { height: '250px', objectFit: 'cover'},
+  cardImage: { height: '250px', objectFit: 'cover' },
   cardTitle: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
   cardText: {
     display: '-webkit-box',
@@ -24,14 +24,14 @@ const styles = {
 };
 
 const formatarData = (dataString) => {
-    if (!dataString) return "N/A";
+  if (!dataString) return "N/A";
 
-    return new Date(dataString).toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric"
-    });
-  };
+  return new Date(dataString).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  });
+};
 
 
 export default function Home({ user }) {
@@ -77,6 +77,8 @@ export default function Home({ user }) {
   useEffect(() => {
     if (user?.id) {
       fetchUserMovies();
+    } else {
+      setUserMovies([]);
     }
   }, [user]);
 
@@ -125,6 +127,7 @@ export default function Home({ user }) {
 
   return (
     <>
+    
       <Carrossel />
 
       <Container className="home" style={{ fontFamily: 'Inter, sans-serif' }}>
@@ -133,7 +136,10 @@ export default function Home({ user }) {
         {successMessage && <Alert dismissible variant="success">{successMessage}</Alert>}
 
         {/* LISTA DO USUÁRIO */}
-        <h5 className="catalogo-title">Sua Lista</h5>
+        <div className="lista-header mb-4">
+          <span className="barra-titulo"></span>
+          <h2 className="titulo-lista">Sua Lista <span className="contador">({userMovies.length})</span></h2>
+        </div>
 
         {!user ? (
           <p className="login-text" onClick={() => navigate('/tela-login')}>
@@ -146,7 +152,7 @@ export default function Home({ user }) {
                 Você ainda não adicionou nenhum filme à sua lista.
               </p>
             ) : (
-              
+
               <Row className="catalogo-row g-3">
                 {userMovies.map(movie => (
                   <Col key={movie.id} xs={6} md={3} lg={2}>
@@ -177,7 +183,10 @@ export default function Home({ user }) {
 
         {/* CATÁLOGO */}
         <div className="catalogo-section">
-          <h5 className="catalogo-title">Catálogo</h5>
+          <div className="lista-header mb-4">
+            <span className="barra-titulo"></span>
+            <h2 className="titulo-lista">Catálogo <span className="contador">({movies.length})</span></h2>
+          </div>
 
           {movies.length === 0 ? (
             <Alert dismissible variant="danger" className="text-center">
@@ -208,7 +217,7 @@ export default function Home({ user }) {
                         variant="primary"
                         onClick={() => handleAdicionar(movie)}
                       >
-                        <span style={{fontSize: "15px", color: "red" }}> + </span> Adicionar à lista
+                        <span style={{ fontSize: "15px", color: "red" }}> + </span> Adicionar à lista
                       </Button>
                     </div>
                   </Card>

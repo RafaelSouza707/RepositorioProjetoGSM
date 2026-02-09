@@ -131,21 +131,13 @@ function TelaLogin({ setUser }) {
     return (
 
         <section className="login-container">
-            <Form
-                className="card-login"
-                onSubmit={modoCadastro ? handleCadastro : handleLogin}
-            >
-                <h2 className="login-title">
-                    {modoCadastro ? "Criar conta" : "Entrar"}
-                </h2>
+            <Form className="card-login" onSubmit={modoCadastro ? handleCadastro : handleLogin} noValidate>
 
-                {mensagemErro && (
-                    <Alert dismissible variant="danger">{mensagemErro}</Alert>
-                )}
+                <h2 className="login-title"> {modoCadastro ? "Criar conta" : "Entrar"} </h2>
 
-                {mensagemSucesso && (
-                    <Alert dismissible variant="success">{mensagemSucesso}</Alert>
-                )}
+                {mensagemErro && (<Alert dismissible variant="danger">{mensagemErro}</Alert>)}
+
+                {mensagemSucesso && (<Alert dismissible variant="success">{mensagemSucesso}</Alert>)}
 
                 {modoCadastro && (
                     <Form.Group className="mb-3">
@@ -196,7 +188,7 @@ function TelaLogin({ setUser }) {
                     onChange={() => setShowSenha(!showSenha)}
                 />
 
-                <Button type="submit" className="botao-primario w-100 mb-2" disabled={!formPreenchido}>
+                <Button variant="danger" type="submit" className="botao-primario w-100 mb-2" disabled={!formPreenchido}>
                     {modoCadastro ? "Cadastrar" : "Entrar"}
                 </Button>
 
